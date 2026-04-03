@@ -1,8 +1,7 @@
 Class repquired: TreasureHunt and Clue
 
 Functions required for TreasureHunt class:
-  loadMap()
-  
+  loadMap()  
   loadClues()
   drawMap()
   movePlayer()
