@@ -32,6 +32,13 @@ Bonus implementations:
 • Hidden secret location
 • Display a “Fun Fact” message after a correct answer
 
+Be Sure To:
+- Make comments for every major part of your work
+- Create "checkpoints" for if there is an error ie if(doesn't work) cout error message
+- be sure to get rid of any error underlines in your work
+
+- goal is to have a runnable code by sunday morning
+
 1. scoring logic/attempts 
   triggerclue in treasurehunt.cpp 
 2. clue calling logic (when you move have you hit a clue or not, calls clue function based on if you hit a clue)
