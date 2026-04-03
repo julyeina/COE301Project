@@ -25,5 +25,6 @@ namespace utility{
         void triggerClue(char symbol);
         void startGame();
         void displayFinalResult();
+        int findClueIndex(char symbol); //for line 118 in TreasureHun cpp file
     };
 }
