@@ -1,0 +1,6 @@
+T, In what year was the UT Tower completed?, 1937
+P, What campus pond is home to turtles AND ducks?, Turtle Pond
+H, What does the H in Hogg Memorial Auditorium stand for?, Hogg
+U, What building is home to the only panda express on campus?, Texas Union
+G, Which U.S. president is represented by the statue marked G?, George Washington
+F, What fountain near the Tower called?, Littlefield Fountain
