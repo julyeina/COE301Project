@@ -1,4 +1,4 @@
-Class repquired: TreasureHunt and Clue
+Class required: TreasureHunt and Clue
 
 Functions required for TreasureHunt class:
   loadMap()  
