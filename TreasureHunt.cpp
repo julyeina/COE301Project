@@ -1,8 +1,8 @@
+#include "TreasureHunt.h"
 #include <iostream> 
 #include <string> 
 #include <fstream> 
 #include <vector>
-#include "TreasureHunt.h"
 
 using namespace std; 
 

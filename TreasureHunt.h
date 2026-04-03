@@ -21,7 +21,7 @@ namespace utility{
         void loadMap(const string& map);
         void loadClues(const string& clues);
         void drawMap();
-        void movePlayer(char direction)
+        void movePlayer(char direction);
         void triggerClue(char symbol);
         void startGame();
         void displayFinalResult();
