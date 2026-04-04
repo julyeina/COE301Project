@@ -78,13 +78,14 @@ bool TreasureHunt :: loadClues(const string& cluesFile){
         getline(clueStream, clueAns, '|');
         getline(clueStream, clueAttempts, '|');
         getline(clueStream, cluePoints, '|');
+        //fun fact for extra credit :)
         getline(clueStream, clueFunfact, '|');
 
         char landmarkSymbol = clueSymbol[0]; //store first letter of word
         int maxAttempts = stoi(clueAttempts); //convert string into int type
         int points = stoi(cluePoints);
 
-        Clue currentClue(landmarkSymbol,clueQuestion,clueAns,maxAttempts,points);
+        Clue currentClue(landmarkSymbol,clueQuestion,clueAns,maxAttempts,points,clueFunfact);
         clues.push_back(currentClue);
     }
     infile.close();
@@ -193,7 +194,7 @@ void TreasureHunt :: triggerClue (char symbol){
             totalScore += clues[clueIndex].getPoints();
             clues[clueIndex].setCompleted(true);
             cout << "Points earned: " << currentclue.getPoints() <<  " points." << endl;
-            cout<< clueFunfact<< endl;
+            cout << "Fun fact: " << currentclue.getFunfact() << endl;
         }else{ 
             trials++;
             cout << "Incorrect." << endl;
