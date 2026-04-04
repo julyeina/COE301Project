@@ -14,6 +14,7 @@ TreasureHunt :: TreasureHunt (){
     gameover = false; 
 }
 
+//error checkpoint for loadMap
 bool TreasureHunt:: loadMap (const string & map){ 
     // load map.txt, stores in string and vector
 
@@ -23,7 +24,7 @@ bool TreasureHunt:: loadMap (const string & map){
         cout << "cant open map.txt" << endl; 
         return false; 
     }
-
+//????
     mapgrid.Clear(); 
     string line; 
     int startingcount = 0; 
@@ -38,7 +39,7 @@ bool TreasureHunt:: loadMap (const string & map){
             startCount++;
         }
     }
-
+//Error checkpoint for starting position
     if (startingCount != 1) {
         cout << "map has more than one start position" << endl; 
         return false;
@@ -48,12 +49,13 @@ bool TreasureHunt:: loadMap (const string & map){
 
     return true; 
 }
-
+//include clues from clue.txt
 bool TreasureHunt :: loadClues (cost string & clues){ 
     //load clue.txt, stores in vector and position
 
     ifstream infile(clues);
 
+    //error checkpoint for opening clue file
     if (!infile.is_open()) {
         cout << "cant open clue file" << endl;
         return false;
