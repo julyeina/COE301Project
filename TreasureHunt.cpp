@@ -56,20 +56,41 @@ bool TreasureHunt:: loadMap (const string & map)
     return true; 
 }
 
-bool TreasureHunt :: loadClues (cost string & clues)
-{ 
-    //load clue.txt, stores in vector and position
 
-    ifstream infile(clueFile);
+bool TreasureHunt :: loadClues(const string& cluesFile){ 
+    //load clue.txt, create obejct of Clue class for each landmarks and store objects in vector
 
-    if (!infile.is_open()) 
-    {
+    ifstream infile(cluesFile);
+
+    if (!infile.is_open()) {
         cout << "cant open clue file" << endl;
         return false;
     }
-    clues.clear();
 
-    return true; 
+    string line;
+    while(getline(infile,line)){
+        if(line.empty()){
+            continue;
+        }
+        stringstream clueStream(line); 
+        //seperate symbol, question, answer, attemp, point that was stored in one line from clue.txt
+        //and store value in each variable
+        string clueSymbol, clueQuestion, clueAns, clueAttempts, cluePoints;
+        getline(clueStream, clueSymbol, '|');
+        getline(clueStream, clueQuestion, '|');
+        getline(clueStream, clueAns, '|');
+        getline(clueStream, clueAttempts, '|');
+        getline(clueStream, cluePoints, '|');
+
+        char landmarkSymbol = clueSymbol[0]; //store first letter of word
+        int maxAttempts = stoi(clueAttempts); //convert string into int type
+        int points = stoi(cluePoints);
+
+        Clue currentClue(landmarkSymbol,clueQuestion,clueAns,maxAttempts,points);
+        clues.push_back(currentClue);
+    }
+    infile.close();
+    return true;
 }
 
 void TreasureHunt :: drawMap () const
@@ -134,21 +155,18 @@ void TreasureHunt:: movePlayer(char direction){
     }
 }
 
-int TreasureHunt :: findClueIndex(char symbol)
-{
-    for(int i = 0; i < clues.size(); i++)
-    {
-        if(clues[i].getSymbol() == symbol)
-        {
+int TreasureHunt :: findClueIndex(char symbol){
+    for (int i = 0; i< clues.size(); i++){
+        if(clues[i].getSymbol() == symbol){
             return i;
         }
     }
+    return -1;
 }
 
-void TreasureHunt :: triggerClue (char Symbol)
+void TreasureHunt :: triggerClue (char symbol)
 { 
     // called when landmark symbol is landed on, asks question, changes points based on answer 
-
 
     int clueIndex = findClueIndex(symbol); //need to add this class in
 
@@ -165,15 +183,34 @@ void TreasureHunt :: triggerClue (char Symbol)
     }
 
     cout << "landmark reached" << endl;
+    cout << clues[clueIndex].getQuestion() << endl;
+    string userAnswer;
+    int trials = 1;
+    bool correct = false;
+    Clue currentclue = clues[clueIndex];
 
-    bool correct = clues[clueIndex].ask();
-
-    if(correct)
-    {
-        totalScore += clues[clueIndex].getPoints();
-    }else{ 
+    while(trials <= clues[clueIndex].getMaxAttempts() && correct == false){
+        getline(cin, userAnswer);
+        if(clues[clueIndex].checkAnswer(userAnswer)){
+            correct = true;
+            cout << "That's Correct!" << endl;
+            totalScore += clues[clueIndex].getPoints();
+            clues[clueIndex].setCompleted(true);
+            cout << "Points earned: " << currentclue.getPoints() <<  " points." << endl;
+        }else{ 
+            trials++;
+            cout << "Incorrect." << endl;
+            //getCorrectAsnwer can be added here to display correct answer 
+            if(trials <= currentclue.getMaxAttempts()){
+                cout << "try again. " << endl;
+            }
+        }
+    }
+    if(correct == false){
+        cout<< "Out of attempts" << endl;
         totalScore -= 5;
     }
+    cout << "Your current total score is now" << totalScore << endl;
 }
 
 bool TreasureHunt:: allCluesCompleted()
