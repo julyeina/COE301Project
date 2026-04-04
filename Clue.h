@@ -1,6 +1,4 @@
-#ifndef CLUE_H
-#define	CLUE_H
-
+pragma once
 #include <string>
 
 using namespace std;
@@ -24,9 +22,11 @@ public:
 		int points);
 
 	char getSymbol() const;
+	string getQuestion() const;
+	string getCorrectAnswer() const;
+	int getMaxAttempts() const;
+	int getPoints() const;
 	bool isCompleted() const;
-
-	bool ask();
+	void setCompleted(bool status);
+	bool checkAnswer(const string& userAnswer) const;
 };
-
-#endif
