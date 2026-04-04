@@ -37,22 +37,18 @@ bool TreasureHunt:: loadMap (const string & map)
 
     for (int col = 0; col < line.length(); col++) \
     {
-        if (line[col] == '#') 
-        {
+        if (line[col] == '#') {
             playerRow = row;
             playerCol = col;
             startCount++;
         }
     }
 
-    if (startCount != 1) 
-    {
+    if (startCount != 1) {
         cout << "map has more than one start position" << endl; 
         return false;
     }
-
     }
-
     return true; 
 }
 
@@ -164,12 +160,10 @@ int TreasureHunt :: findClueIndex(char symbol){
     return -1;
 }
 
-void TreasureHunt :: triggerClue (char symbol)
-{ 
+void TreasureHunt :: triggerClue (char symbol){ 
     // called when landmark symbol is landed on, asks question, changes points based on answer 
 
     int clueIndex = findClueIndex(symbol); //need to add this class in
-
     if (clueIndex == -1) 
     {
         cout << "No clue found" << endl; 
