@@ -6,16 +6,17 @@
 
 using namespace std; 
 
-TreasureHunt :: TreasureHunt (){ 
+TreasureHunt :: TreasureHunt ()
+{ 
     //sets all scores to 0 
     playerRow = 0; 
     playerCol = 0; 
     totalScore = 0; 
-    gameover = false; 
+    gameOver = false; 
 }
 
-//error checkpoint for loadMap
-bool TreasureHunt:: loadMap (const string & map){ 
+bool TreasureHunt:: loadMap (const string & map)
+{ 
     // load map.txt, stores in string and vector
 
     ifstream infile(map); 
@@ -24,23 +25,26 @@ bool TreasureHunt:: loadMap (const string & map){
         cout << "cant open map.txt" << endl; 
         return false; 
     }
-//????
-    mapgrid.Clear(); 
+
+    mapGrid.Clear(); 
     string line; 
-    int startingcount = 0; 
+    int startCount = 0; 
 
     for (int row = 0; getline(infile, line); row++) {
     mapGrid.push_back(line);
 
-    for (int col = 0; col < line.length(); col++) {
-        if (line[col] == '@') {
+    for (int col = 0; col < line.length(); col++) \
+    {
+        if (line[col] == '#') 
+        {
             playerRow = row;
             playerCol = col;
             startCount++;
         }
     }
-//Error checkpoint for starting position
-    if (startingCount != 1) {
+
+    if (startCount != 1) 
+    {
         cout << "map has more than one start position" << endl; 
         return false;
     }
@@ -49,14 +53,15 @@ bool TreasureHunt:: loadMap (const string & map){
 
     return true; 
 }
-//include clues from clue.txt
-bool TreasureHunt :: loadClues (cost string & clues){ 
+
+bool TreasureHunt :: loadClues (cost string & clues)
+{ 
     //load clue.txt, stores in vector and position
 
-    ifstream infile(clues);
+    ifstream infile(clueFile);
 
-    //error checkpoint for opening clue file
-    if (!infile.is_open()) {
+    if (!infile.is_open()) 
+    {
         cout << "cant open clue file" << endl;
         return false;
     }
@@ -65,12 +70,14 @@ bool TreasureHunt :: loadClues (cost string & clues){
     return true; 
 }
 
-void TreasureHunt :: drawMap () const{ 
+void TreasureHunt :: drawMap () const
+{ 
     //print map with updated player position
 
-    cout << "Score: " << score << endl;
+    cout << "Score: " << totalScore << endl;
 
-    for (int i = 0; i < mapGrid.size(); i++) {
+    for (int i = 0; i < mapGrid.size(); i++) 
+    {
         cout << mapGrid[i] << endl;
     }
 
@@ -92,71 +99,118 @@ void TreasureHunt:: movePlayer(char direction){
     else if (direction == 'A' || direction == 'a') {
         newCol--;
     }
-    else if (direction == 'D' || direction == 'd') {
+    else if (direction == 'D' || direction == 'd') 
+    {
         newCol++;
-    }
-    else {
+    }else {
         cout << "Invalid input" << endl; 
         return;
     }
 
     if (newRow < 0 || newRow >= mapGrid.size() ||
-        newCol < 0 || newCol >= mapGrid[newRow].length()) {
+        newCol < 0 || newCol >= mapGrid[newRow].length()) 
+    {
         cout << "moving outside map" << endl;
         return;
     }
 
-    if (mapGrid[newRow][newCol] == '#') {
+    if (mapGrid[newRow][newCol] == '#') 
+    {
         cout << "hit a wall" << endl;
         return;
     }
-
+    char symbol = mapGrid[newRow][newCol];
+//move player
+    mapGrid[playerRow][newCol] = '.';
+    playerRow = newRow;
+    playCol = newCol;
+    mapGrid[playerRow][PlayerCol] = '#';
+//trigger clue if its not empty space
+    if(symbol != '.' && symbol != '#')
+    {
+        triggerClue(symbol);
+    }
 }
 
-void TreasureHunt :: triggerClue (char Symbol){ 
+int TreasureHunt :: findClueIndex(char symbol)
+{
+    for(int i = 0; i < clues.size(); i++)
+    {
+        if(clues[i].getSymbol() == symbol)
+        {
+            return i;
+        }
+    }
+}
+
+void TreasureHunt :: triggerClue (char Symbol)
+{ 
     // called when landmark symbol is landed on, asks question, changes points based on answer 
 
 
     int clueIndex = findClueIndex(symbol); //need to add this class in
 
-    if (clueIndex == -1) {
+    if (clueIndex == -1) 
+    {
         cout << "No clue found" << endl; 
         return;
     }
 
-    if (clues[clueIndex].isCompleted()) {
+    if (clues[clueIndex].isCompleted()) 
+    {
         cout << "already completed" << endl;
         return;
     }
 
     cout << "landmark reached" << endl;
-    cout << clues[clueIndex].getQuestion() << endl;
 
-    string userAnswer;
-    bool solved = false;
+    bool correct = clues[clueIndex].ask();
 
-    //question/attempt logic
-
+    if(correct)
+    {
+        totalScore += clues[clueIndex].getPoints();
+    }else{ 
+        totalScore -= 5;
+    }
 }
 
-void TreasureHunt :: startGame () const { 
+bool TreasureHunt:: allCluesCompleted()
+{
+    for(int i = 0; i < clues.size(), i++)
+    {
+        if(!clues[i].isCompleted())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+    //question/attempt logic
+
+void TreasureHunt :: startGame ()  
+{ 
     //game logic loop, wins and losses
 
     char direction;
-    while (!gameOver) {
+    while (!gameOver) 
+    {
         drawMap();
 
-        cout << "game started";
+        cout << "Game Started use WASD to move";
         cin >> direction;
-        cin.ignore();
+        
 
         movePlayer(direction);
-
-        if (allCluesCompleted()) {
+//win conditions 
+        if (allCluesCompleted()) 
+        {
+            cout << "You completed all the clues!" << endl;
             gameOver = true;
         }
-
-        if (score < -10) {
+//lose coditions 
+        if (score < -10) 
+        {
+            cout << "Loser! Fake UT student" << endl;
             gameOver = true;
         }
     }
@@ -164,8 +218,29 @@ void TreasureHunt :: startGame () const {
     displayFinalResult();
 }
 
-void displayFinalResult () const{ 
+void TreasureHunt :: displayFinalResult () const
+{ 
     //shows completion percent and calls win/loss logic 
+    int completed = 0;
 
-    cout << "Final Score: " << score << endl;
+    for(int i = 0; i < clue.size(); i++)
+    {
+        if(clues[i].iscompleted() completed++;
+    }
+
+    double percent = 0;
+    if(clues.size() > 0)
+    {
+        percent = (double)completed / clues.size() * 100;
+    }
+
+    cout << "\nFinal Score: " << totalScore << endl;
+    cout << "You completed " << percent << "% of the map" << endl;
+
+    if(percent == 100)
+    {
+        cout << "Winner Winner chicken dinner!" << endl;
+    }else{
+        cout << "LOSER!" << endl;
+    }
 }
