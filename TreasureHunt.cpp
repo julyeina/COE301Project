@@ -3,6 +3,7 @@
 #include <string> 
 #include <fstream> 
 #include <vector>
+#include <sstream>
 
 using namespace std; 
 
@@ -71,12 +72,13 @@ bool TreasureHunt :: loadClues(const string& cluesFile){
         stringstream clueStream(line); 
         //seperate symbol, question, answer, attemp, point that was stored in one line from clue.txt
         //and store value in each variable
-        string clueSymbol, clueQuestion, clueAns, clueAttempts, cluePoints;
+        string clueSymbol, clueQuestion, clueAns, clueAttempts, cluePoints, clueFunfact;
         getline(clueStream, clueSymbol, '|');
         getline(clueStream, clueQuestion, '|');
         getline(clueStream, clueAns, '|');
         getline(clueStream, clueAttempts, '|');
         getline(clueStream, cluePoints, '|');
+        getline(clueStream, clueFunfact, '|');
 
         char landmarkSymbol = clueSymbol[0]; //store first letter of word
         int maxAttempts = stoi(clueAttempts); //convert string into int type
@@ -191,6 +193,7 @@ void TreasureHunt :: triggerClue (char symbol){
             totalScore += clues[clueIndex].getPoints();
             clues[clueIndex].setCompleted(true);
             cout << "Points earned: " << currentclue.getPoints() <<  " points." << endl;
+            cout<< clueFunfact<< endl;
         }else{ 
             trials++;
             cout << "Incorrect." << endl;
