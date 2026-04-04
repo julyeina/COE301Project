@@ -13,6 +13,8 @@ TreasureHunt :: TreasureHunt ()
     playerCol = 0; 
     totalScore = 0; 
     gameOver = false; 
+
+    timeLimitSeconds = 300; // Time limit of 5 minutes
 }
 
 bool TreasureHunt:: loadMap (const string & map)
@@ -190,11 +192,22 @@ bool TreasureHunt:: allCluesCompleted()
 void TreasureHunt :: startGame ()  
 { 
     //game logic loop, wins and losses
-
+    startTime = chrono::steady_clock::now(); //START TIME
     char direction;
     while (!gameOver) 
     {
         drawMap();
+
+    int elapsed = chrono::duration_cast<chrono::seconds>(
+    chrono::steady_clock::now() - startTime).count();
+
+    cout << "Time Elapsed: " << elapsed << " seconds" << endl;
+
+    if (elapsed >= timeLimitSeconds) {
+        cout << "Time is up!" << endl;
+        gameOver = true;
+        break;
+            }
 
         cout << "Game Started use WASD to move";
         cin >> direction;
@@ -215,7 +228,14 @@ void TreasureHunt :: startGame ()
         }
     }
 
+    endTime = chrono::steady_clock::now();  // STOP TIMER
     displayFinalResult();
+    
+        int totalTime = chrono::duration_cast<chrono::seconds>(
+          endTime - startTime).count();
+
+    cout << "Total Time Played: " << totalTime << " seconds" << endl;
+
 }
 
 void TreasureHunt :: displayFinalResult () const
