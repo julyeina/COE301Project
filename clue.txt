@@ -4,3 +4,7 @@ H, What does the H in Hogg Memorial Auditorium stand for?, Hogg
 U, What building is home to the only panda express on campus?, Texas Union
 G, Which U.S. president is represented by the statue marked G?, George Washington
 F, What fountain near the Tower called?, Littlefield Fountain
+A, How tall is the UT tower?, 307 Ft
+B, Which prominent UT player started their own sausage company?, Earl Campbell
+C, What is the name of the famous drum weighs in at over 500 pounds, measures eight feet in diameter, and is almost a century old?, Big Bertha 
+D, What did UT Austin scientists discover in an underwater cave in Central Texas?, Ice age fossils 
