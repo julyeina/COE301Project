@@ -1,4 +1,8 @@
+#include <iostream>
 #include "Clue.h"
+using namespace std;
+using namespace utility;
+
 
 Clue::Clue()
 	: symbol('?'),

@@ -1,11 +1,13 @@
 #include <iostream>
 #include "TreasureHunt.h"
+using namespace std;
+using namespace utility;
 
 int main(){ 
     TreasureHunt game; 
 
     //ERROR CHECKING SCRIPTS    
-    if (!game.loadmap("map.txt")){ 
+    if (!game.loadMap("map.txt")){ 
         cout << "Error, cant load map" << endl; 
         return  1; 
 
@@ -16,7 +18,7 @@ int main(){
         return 1; 
     }
 
-    game.startgame(); 
+    game.startGame(); 
 
     return 0; 
 }

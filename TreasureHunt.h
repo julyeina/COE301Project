@@ -18,8 +18,8 @@ namespace utility{
 
     public:
         TreasureHunt();
-        void loadMap(const string& map);
-        void loadClues(const string& clues);
+        bool loadMap(const string& map);
+        bool loadClues(const string& clues);
         void drawMap();
         void movePlayer(char direction);
         void triggerClue(char symbol);
