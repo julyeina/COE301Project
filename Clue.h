@@ -10,6 +10,7 @@ namespace utility{
 		char symbol;
 		string question;
 		string correctAnswer;
+		string funfact
 		int maxAttempts;
 		int points;
 		bool completed;
@@ -22,6 +23,7 @@ namespace utility{
 			const string& correctAnswer, 
 			int maxAttempts, 
 			int points);
+			const string& funFact,
 
 		char getSymbol() const;
 		bool isCompleted() const;
