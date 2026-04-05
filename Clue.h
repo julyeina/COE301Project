@@ -1,33 +1,36 @@
 #pragma once
-#include <iostream>
+
 #include <string>
 
-using namespace std;
+namespace utility {
+class Clue {
+private:
+    char symbol;
+    std::string question;
+    std::string correctAnswer;
+    int maxAttempts;
+    int points;
+    std::string funFact;
+    bool completed;
 
-namespace utility{
-	class Clue{
-	private:
-		char symbol;
-		string question;
-		string correctAnswer;
-		string funfact
-		int maxAttempts;
-		int points;
-		bool completed;
+public:
+    Clue();
+    Clue(char symbol,
+         const std::string& question,
+         const std::string& correctAnswer,
+         int maxAttempts,
+         int points,
+         const std::string& funFact);
 
-	public:
+    char getSymbol() const;
+    const std::string& getQuestion() const;
+    const std::string& getCorrectAnswer() const;
+    int getMaxAttempts() const;
+    int getPoints() const;
+    const std::string& getFunFact() const;
+    bool isCompleted() const;
 
-		Clue();
-		Clue(char symbol, 
-			const string& question, 
-			const string& correctAnswer, 
-			int maxAttempts, 
-			int points);
-			const string& funFact,
-
-		char getSymbol() const;
-		bool isCompleted() const;
-
-		bool ask();
-	};
+    bool checkAnswer(const std::string& userAnswer) const;
+    void setCompleted(bool value);
+};
 }

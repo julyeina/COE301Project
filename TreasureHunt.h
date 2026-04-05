@@ -18,9 +18,11 @@ namespace utility{
         bool gameOver;
 
 chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
-chrono::steady_clock::time_point endTime;
-int timeLimitSeconds; // optional (0 = no limit)
+        chrono::steady_clock::time_point endTime;
+        int timeLimitSeconds; // optional (0 = no limit)
 
+        void placeCluesOnMap();
+        bool allCluesCompleted() const;
 
     public:
         TreasureHunt();
