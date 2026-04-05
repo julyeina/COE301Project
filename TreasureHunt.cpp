@@ -324,6 +324,15 @@ bool TreasureHunt::allCluesCompleted() const {
 }
 
 void TreasureHunt::startGame() {
+
+    cout << "Load saved game? (y/n): "; //Allows players to load a previously saved game when they start the game, giving them the option to continue from where they left off or start fresh.
+    char choice;
+    cin >> choice;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    if (choice == 'y' || choice == 'Y') {
+        loadGame("save.txt");
+    }
     startTime = chrono::steady_clock::now();
 
     while (!gameOver) {
@@ -383,6 +392,50 @@ void TreasureHunt::promptSave()  // This ensures just saving the progress by sav
         saveGame("save.txt");
         cout << "Progress saved.\n";
     }
+}
+
+bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can be loaded back by reading the cordinates and clues completed from the text file and then restoring the game state accordingly
+{
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "No saved game found.\n";
+        return false;
+    }
+
+    // Load player position and score
+    inFile >> playerRow >> playerCol;
+    inFile >> totalScore;
+
+    int clueCount;
+    inFile >> clueCount;
+
+    // Restore which clues were completed
+    for (int i = 0; i < clueCount; ++i) {
+        char symbol;
+        bool completed;
+        inFile >> symbol >> completed;
+
+        int index = findClueIndex(symbol);
+        if (index == -1) {
+            continue;
+        }
+
+        clues[index].setCompleted(completed);
+
+        // If a clue was already completed, remove it from the map
+        if (completed) {
+            for (size_t r = 0; r < mapGrid.size(); ++r) {
+                for (size_t c = 0; c < mapGrid[r].size(); ++c) {
+                    if (mapGrid[r][c] == symbol) {
+                        mapGrid[r][c] = '.';
+                    }
+                }
+            }
+        }
+    }
+
+    cout << "Saved game loaded successfully.\n";
+    return true;
 }
 
 void TreasureHunt::saveGame(const string& filename)

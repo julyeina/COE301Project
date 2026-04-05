@@ -36,6 +36,7 @@ chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
 
         void promptSave();                        //Save Progress Function
         void saveGame(const string& filename);
+        bool loadGame(const string& filename);    //Load Progress Function
 
         int findClueIndex(char symbol); 
 
