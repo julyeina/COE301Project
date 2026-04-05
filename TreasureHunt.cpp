@@ -30,6 +30,7 @@ TreasureHunt::TreasureHunt() {
     totalScore = 0;
     gameOver = false;
     timeLimitSeconds = 300;
+
 }
 
 bool TreasureHunt::loadMap(const string& mapFile) {
@@ -276,6 +277,10 @@ void TreasureHunt::triggerClue(char symbol) {
             mapGrid[playerRow][playerCol] = '.';
 
             cout << "Correct! You earned " << clues[clueIndex].getPoints() << " points." << endl;
+            int remaining = timeLimitSeconds - getElapsedTime();
+            if (remaining < 0) remaining = 0;
+            cout << "Time left: " << remaining << " seconds" << endl;
+            
             if (!clues[clueIndex].getFunFact().empty()) {
                 cout << clues[clueIndex].getFunFact() << endl;
             }
@@ -288,6 +293,13 @@ void TreasureHunt::triggerClue(char symbol) {
     if (!solved) {
         totalScore -= 5;
         cout << "Out of attempts. 5 points were deducted." << endl;
+        
+        int remaining = timeLimitSeconds - getElapsedTime(); //Countdown after getting question right or wrong
+        if (remaining < 0) remaining = 0;
+        cout << "Time remaining: "
+         << remaining
+         << " seconds" << endl;
+
     }
 
     cout << "Current score: " << totalScore << endl;
