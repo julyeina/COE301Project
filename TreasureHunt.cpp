@@ -310,6 +310,7 @@ void TreasureHunt::triggerClue(char symbol) {
     }
 
     cout << "Current score: " << totalScore << endl;
+    promptSave();
 }
 
 bool TreasureHunt::allCluesCompleted() const {
@@ -370,6 +371,42 @@ void TreasureHunt::displayFinalResult() {
     cout << "Completion: " << percent << "%" << endl;
     cout << "Time played: " << getElapsedTime() << " seconds" << endl;
 }
+
+
+void TreasureHunt::promptSave()  // This ensures just saving the progress by saving the cordinates into a text file and then loading it back when the game is restarted.
+{
+    char choice;
+    cout << "Would you like to save your progress? (y/n): ";
+    cin >> choice;
+
+    if (choice == 'y' || choice == 'Y') {
+        saveGame("save.txt");
+        cout << "Progress saved.\n";
+    }
+}
+
+void TreasureHunt::saveGame(const string& filename)
+{
+    ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        cout << "Error saving game.\n";
+        return;
+    }
+
+    // Save player state
+    outFile << playerRow << " " << playerCol << endl;
+    outFile << totalScore << endl;
+
+    // Save clue completion state
+    outFile << clues.size() << endl;
+    for (int i = 0; i < clues.size(); i++) {
+        outFile << clues[i].getSymbol() << " "
+            << clues[i].isCompleted() << endl;
+    }
+
+    outFile.close();
+}
+
 
 int TreasureHunt::getElapsedTime() const {
     chrono::steady_clock::time_point finish = endTime;
