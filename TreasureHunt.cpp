@@ -177,7 +177,7 @@ void TreasureHunt::placeCluesOnMap() {
 
 void TreasureHunt::drawMap() {
     cout << "\nScore: " << totalScore << endl;
-    cout << "Use W A S D to move. Enter Q to quit." << endl;
+    cout << "Enter W/A/S/D and number of steps(Enter Q to quit.): " << endl;
 
     for (size_t row = 0; row < mapGrid.size(); ++row) {
         for (size_t col = 0; col < mapGrid[row].size(); ++col) {
@@ -192,29 +192,35 @@ void TreasureHunt::drawMap() {
     cout << endl;
 }
 
-void TreasureHunt::movePlayer(char direction) {
-    const char move = static_cast<char>(tolower(static_cast<unsigned char>(direction)));
+void TreasureHunt::movePlayer(char direction, int steps) {
+  const char move = static_cast<char>(tolower(static_cast<unsigned char>(direction)));
 
     if (move == 'q') {
         gameOver = true;
         return;
     }
 
+ for (int i = 0; i < steps; i++) {
     int newRow = playerRow;
     int newCol = playerCol;
 
     if (move == 'w') {
         --newRow;
-    } else if (move == 's') {
+    } 
+    else if (move == 's') {
         ++newRow;
-    } else if (move == 'a') {
+    } 
+    else if (move == 'a') {
         --newCol;
-    } else if (move == 'd') {
+    } 
+    else if (move == 'd') {
         ++newCol;
-    } else {
+    } 
+    else {
         cout << "Invalid input. Use W, A, S, D, or Q." << endl;
         return;
     }
+
 
     if (newRow < 0 || newRow >= static_cast<int>(mapGrid.size())) {
         cout << "You cannot move outside the map." << endl;
@@ -238,6 +244,7 @@ void TreasureHunt::movePlayer(char direction) {
     if (symbol != '.') {
         triggerClue(symbol);
     }
+}
 }
 
 int TreasureHunt::findClueIndex(char symbol) {
@@ -329,10 +336,11 @@ void TreasureHunt::startGame() {
 
         cout << "Move: ";
         char direction = '\0';
+        int steps = 1;
         cin >> direction;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        movePlayer(direction);
+        movePlayer(direction,steps);
 
         if (allCluesCompleted()) {
             cout << "You completed all of the clues." << endl;
