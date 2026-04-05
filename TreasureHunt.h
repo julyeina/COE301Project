@@ -33,6 +33,10 @@ chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
         void triggerClue(char symbol);
         void startGame();
         void displayFinalResult();
+
+        void promptSave();                        //Save Progress Function
+        void saveGame(const string& filename);
+
         int findClueIndex(char symbol); 
 
         int getElapsedTime() const; // TIMER FUNCTIONS

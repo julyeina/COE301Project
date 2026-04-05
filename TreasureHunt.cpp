@@ -233,7 +233,7 @@ void TreasureHunt::movePlayer(char direction, int steps) {
     }
 
     if (mapGrid[newRow][newCol] == '#') {
-        cout << "You hit a wall." << endl;
+        cout << "You hit a wall. You stopped before hitting a wall after "<< i << " step(s)." << endl;
         return;
     }
 
