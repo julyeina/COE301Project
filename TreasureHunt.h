@@ -29,7 +29,7 @@ chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
         bool loadMap(const string& map);
         bool loadClues(const string& clues);
         void drawMap();
-        void movePlayer(char direction);
+        void movePlayer(char direction, int steps);
         void triggerClue(char symbol);
         void startGame();
         void displayFinalResult();
