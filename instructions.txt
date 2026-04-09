@@ -1,0 +1,11 @@
+Hello player! Welcome to: So You Think You’re a Longhorn! 
+You are tasked with finding different landmarks on the map (represented by symbols and special characters). 
+You will only have five minutes to complete your quest…. Unless you find a power up! 
+Power ups are scattered across the map that grant you extra time or give you double or nothing points. 
+By the end you’ll find out how much of a longhorn you are (we're going to weed you out)!
+
+How to play:
+To walk you will type the direction and number of spaces you’d like to travel (ex: w10)
+To interact with a landmark you will walk directly on top of it’s space
+
+(P.S. there may or may not be a hidden passage somewhere on the map…)
