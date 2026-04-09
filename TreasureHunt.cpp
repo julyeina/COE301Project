@@ -36,7 +36,7 @@ TreasureHunt::TreasureHunt() {
 bool TreasureHunt::loadMap(const string& mapFile) {
     ifstream infile(mapFile.c_str());
     if (!infile.is_open()) {
-        cout << "Error: could not open map file." << endl;
+        cout << "Longhorn Alert: Couldn’t load the Forty Acres map!" << endl;
         return false;
     }
 
@@ -51,7 +51,7 @@ bool TreasureHunt::loadMap(const string& mapFile) {
     }
 
     if (mapGrid.empty()) {
-        cout << "Error: map file is empty." << endl;
+        cout << "Longhorn Error: The campus map is empty... that ain’t right." << endl;
         return false;
     }
 
@@ -71,7 +71,7 @@ bool TreasureHunt::loadMap(const string& mapFile) {
     }
 
     if (!foundStart) {
-        cout << "Error: map does not contain any walkable tiles." << endl;
+        cout << "Longhorn Error: No walkable paths on campus!" << endl;
         return false;
     }
 
@@ -81,7 +81,7 @@ bool TreasureHunt::loadMap(const string& mapFile) {
 bool TreasureHunt::loadClues(const string& cluesFile) {
     ifstream infile(cluesFile.c_str());
     if (!infile.is_open()) {
-        cout << "Error: could not open clue file." << endl;
+        cout << "Longhorn Alert: Clues couldn’t be found across the Forty Acres!" << endl;
         return false;
     }
 
@@ -115,7 +115,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
         }
 
         if (clueSymbol.empty() || clueQuestion.empty() || clueAnswer.empty()) {
-            cout << "Warning: skipped an invalid clue line." << endl;
+            cout << "Longhorn Warning: Skipped a bad clue line." << endl;
             continue;
         }
 
@@ -123,7 +123,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
     }
 
     if (clues.empty()) {
-        cout << "Error: no clues were loaded." << endl;
+        cout << "Longhorn Error: No clues loaded—Bevo is disappointed." << endl;
         return false;
     }
 
@@ -144,7 +144,7 @@ void TreasureHunt::placeCluesOnMap() {
     }
 
     if (openTiles.size() < clues.size()) {
-        cout << "Warning: not enough open spaces for every clue." << endl;
+        cout << "Longhorn Warning: Not enough space on campus for all clues." << endl;
     }
 
     vector<bool> used(openTiles.size(), false);
@@ -176,8 +176,8 @@ void TreasureHunt::placeCluesOnMap() {
 }
 
 void TreasureHunt::drawMap() {
-    cout << "\nScore: " << totalScore << endl;
-    cout << "Enter W/A/S/D and number of steps(Enter Q to quit.): " << endl;
+    cout << "\n Longhorn Score: " << totalScore << endl;
+    cout << "Move with W/A/S/D (Q to quit the Forty Acres): " << endl;
 
     for (size_t row = 0; row < mapGrid.size(); ++row) {
         for (size_t col = 0; col < mapGrid[row].size(); ++col) {
@@ -217,23 +217,23 @@ void TreasureHunt::movePlayer(char direction, int steps) {
         ++newCol;
     } 
     else {
-        cout << "Invalid input. Use W, A, S, D, or Q." << endl;
+        cout << "Invalid move, Longhorn. Use W, A, S, D, or Q." << endl;
         return;
     }
 
 
     if (newRow < 0 || newRow >= static_cast<int>(mapGrid.size())) {
-        cout << "You cannot move outside the map." << endl;
+        cout << "You’re leaving campus boundaries—stay on the Forty Acres!" << endl;
         return;
     }
 
     if (newCol < 0 || newCol >= static_cast<int>(mapGrid[newRow].size())) {
-        cout << "You cannot move outside the map." << endl;
+        cout << "You’re leaving campus boundaries—stay on the Forty Acres!" << endl;
         return;
     }
 
     if (mapGrid[newRow][newCol] == '#') {
-        cout << "You hit a wall. You stopped before hitting a wall after "<< i << " step(s)." << endl;
+        cout << "You ran into a campus wall after "<< i << " step(s). Watch where you're going!" << endl;
         return;
     }
 
@@ -267,7 +267,7 @@ void TreasureHunt::triggerClue(char symbol) {
         return;
     }
 
-    cout << "\nClue " << clues[clueIndex].getSymbol() << endl;
+    cout << "\n Longhorn Clue " << clues[clueIndex].getSymbol() << endl;
     cout << clues[clueIndex].getQuestion() << endl;
 
     bool solved = false;
@@ -283,7 +283,7 @@ void TreasureHunt::triggerClue(char symbol) {
             totalScore += clues[clueIndex].getPoints();
             mapGrid[playerRow][playerCol] = '.';
 
-            cout << "Correct! You earned " << clues[clueIndex].getPoints() << " points." << endl;
+            cout << "Correct! You earned " << clues[clueIndex].getPoints() << "  Longhorn points!" << endl;
             int remaining = timeLimitSeconds - getElapsedTime();
             if (remaining < 0) remaining = 0;
             cout << "Time left: " << remaining << " seconds" << endl;
@@ -294,12 +294,12 @@ void TreasureHunt::triggerClue(char symbol) {
             break;
         }
 
-        cout << "Incorrect." << endl;
+        cout << "Not quite, Longhorn." << endl;
     }
 
     if (!solved) {
         totalScore -= 5;
-        cout << "Out of attempts. 5 points were deducted." << endl;
+        cout << "Out of attempts. Lost 5 Longhorn points." << endl;
         
         int remaining = timeLimitSeconds - getElapsedTime(); //Countdown after getting question right or wrong
         if (remaining < 0) remaining = 0;
@@ -309,7 +309,7 @@ void TreasureHunt::triggerClue(char symbol) {
 
     }
 
-    cout << "Current score: " << totalScore << endl;
+    cout << "Current Longhorn Score: " << totalScore << endl;
     promptSave();
 }
 
@@ -325,7 +325,7 @@ bool TreasureHunt::allCluesCompleted() const {
 
 void TreasureHunt::startGame() {
 
-    cout << "Load saved game? (y/n): "; //Allows players to load a previously saved game when they start the game, giving them the option to continue from where they left off or start fresh.
+    cout << "Pick up where you left off, Longhorn? (y/n): "; //Allows players to load a previously saved game when they start the game, giving them the option to continue from where they left off or start fresh.
     char choice;
     cin >> choice;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -339,12 +339,12 @@ void TreasureHunt::startGame() {
         drawMap();
 
         if (isTimeUp()) {
-            cout << "Time is up!" << endl;
+            cout << "Time’s up on the Forty Acres!" << endl;
             gameOver = true;
             break;
         }
 
-        cout << "Move: ";
+        cout << "Your move: ";
         char direction = '\0';
         int steps = 1;
         cin >> direction;
@@ -353,7 +353,7 @@ void TreasureHunt::startGame() {
         movePlayer(direction,steps);
 
         if (allCluesCompleted()) {
-            cout << "You completed all of the clues." << endl;
+            cout << "You completed all the Longhorn challenges!" << endl;
             gameOver = true;
         }
     }
@@ -375,22 +375,22 @@ void TreasureHunt::displayFinalResult() {
         percent = (static_cast<double>(completed) / static_cast<double>(clues.size())) * 100.0;
     }
 
-    cout << "\nFinal Score: " << totalScore << endl;
+    cout << "\nFinal Longhorn Score: " << totalScore << endl;
     cout << "Clues completed: " << completed << " / " << clues.size() << endl;
     cout << "Completion: " << percent << "%" << endl;
-    cout << "Time played: " << getElapsedTime() << " seconds" << endl;
+    cout << "Time on the Forty Acres: " << getElapsedTime() << " seconds" << endl;
 }
 
 
 void TreasureHunt::promptSave()  // This ensures just saving the progress by saving the cordinates into a text file and then loading it back when the game is restarted.
 {
     char choice;
-    cout << "Would you like to save your progress? (y/n): ";
+    cout << "Save your Longhorn journey? (y/n): ";
     cin >> choice;
 
     if (choice == 'y' || choice == 'Y') {
         saveGame("save.txt");
-        cout << "Progress saved.\n";
+        cout << "Progress saved. Hook ’em!\n";
     }
 }
 
@@ -398,7 +398,7 @@ bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can
 {
     ifstream inFile(filename);
     if (!inFile.is_open()) {
-        cout << "No saved game found.\n";
+        cout << "No saved Longhorn journey found.\n";
         return false;
     }
 
@@ -434,7 +434,7 @@ bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can
         }
     }
 
-    cout << "Saved game loaded successfully.\n";
+    cout << "Longhorn progress loaded successfully!\n";
     return true;
 }
 
@@ -442,7 +442,7 @@ void TreasureHunt::saveGame(const string& filename)
 {
     ofstream outFile(filename);
     if (!outFile.is_open()) {
-        cout << "Error saving game.\n";
+        cout << "Error saving your Longhorn progress.\n";
         return;
     }
 
