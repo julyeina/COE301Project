@@ -8,13 +8,13 @@ int main(){
 
     //ERROR CHECKING SCRIPTS    
     if (!game.loadMap("map.txt")){ 
-        cout << "Error, cant load map" << endl; 
+        cout << "Longhorn Alert: Couldn’t load the campus map! Check your file and try again." << endl; 
         return  1; 
 
     }
 
     if (!game.loadClues("clue.txt")){ 
-        cout << "Error, cant load clues" << endl; 
+        cout << "Longhorn Alert: Clues are missing from the Forty Acres! Fix the file and reload." << endl; 
         return 1; 
     }
 
