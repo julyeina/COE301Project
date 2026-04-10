@@ -322,7 +322,8 @@ bool TreasureHunt::allCluesCompleted() const {
 
     return true;
 }
-void TreasureHunt::showInstructions() {   // ← ADD STEP 1 HERE
+//calls instruction.txt before game starts
+void TreasureHunt::showInstructions() {   
     ifstream infile("instruction.txt");
 
     if (!infile.is_open()) {
@@ -398,6 +399,8 @@ void TreasureHunt::displayFinalResult() {
     cout << "\nFinal Longhorn Score: " << totalScore << endl;
     cout << "Clues completed: " << completed << " / " << clues.size() << endl;
     cout << "Completion: " << percent << "%" << endl;
+
+    //buzzfeed-esque quiz answers
     if (percent == 100) {
     cout << "You know to much.... You're a TA." << endl;
 }
@@ -498,7 +501,7 @@ void TreasureHunt::saveGame(const string& filename)
     outFile.close();
 }
 
-
+//track time/counts seconds
 int TreasureHunt::getElapsedTime() const {
     chrono::steady_clock::time_point finish = endTime;
     if (!gameOver) {
