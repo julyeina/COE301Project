@@ -16,13 +16,17 @@ namespace utility{
         int playerCol;
         int totalScore;
         bool gameOver;
+        int skipCount = 0;          // Tracks "The Big Ticket" (Skips available)
+        bool doublePoints = false;  // Tracks "x2 Bevo Bucks" (Next right answer is 2x)
 
-chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
+        chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
         chrono::steady_clock::time_point endTime;
-        int timeLimitSeconds; // optional (0 = no limit)
+        int timeLimitSeconds = 300; // Total time (Starting with 5 mins)
 
         void placeCluesOnMap();
         bool allCluesCompleted() const;
+
+        bool squirrelFound = false; //for tracking the finding of the surprise waiting when the player finds the passage
 
     public:
         TreasureHunt();
@@ -39,6 +43,8 @@ chrono::steady_clock::time_point startTime;  // TIMER VARIABLES
         bool loadGame(const string& filename);    //Load Progress Function
 
         int findClueIndex(char symbol); 
+
+        void handlePowerup(); //powerup function
 
         int getElapsedTime() const; // TIMER FUNCTIONS
         bool isTimeUp() const;

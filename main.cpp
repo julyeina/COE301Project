@@ -8,7 +8,7 @@ int main(){
 
     //ERROR CHECKING SCRIPTS    
     if (!game.loadMap("map.txt")){ 
-        cout << "Longhorn Alert: Couldn’t load the campus map! Check your file and try again." << endl; 
+        cout << "Longhorn Alert: Couldn't load the campus map! Check your file and try again." << endl; 
         return  1; 
 
     }
