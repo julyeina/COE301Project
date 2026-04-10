@@ -123,7 +123,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
     }
 
     if (clues.empty()) {
-        cout << "Longhorn Error: No clues loaded—Bevo is disappointed." << endl;
+        cout << "Longhorn Error: No clues loaded.Bevo is disappointed." << endl;
         return false;
     }
 
@@ -223,12 +223,12 @@ void TreasureHunt::movePlayer(char direction, int steps) {
 
 
     if (newRow < 0 || newRow >= static_cast<int>(mapGrid.size())) {
-        cout << "You’re leaving campus boundaries—stay on the Forty Acres!" << endl;
+        cout << "You’re leaving campus boundaries.Stay on the Forty Acres!" << endl;
         return;
     }
 
     if (newCol < 0 || newCol >= static_cast<int>(mapGrid[newRow].size())) {
-        cout << "You’re leaving campus boundaries—stay on the Forty Acres!" << endl;
+        cout << "You’re leaving campus boundaries.Stay on the Forty Acres!" << endl;
         return;
     }
 
