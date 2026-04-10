@@ -322,6 +322,26 @@ bool TreasureHunt::allCluesCompleted() const {
 
     return true;
 }
+void TreasureHunt::showInstructions() {   // ← ADD STEP 1 HERE
+    ifstream infile("instruction.txt");
+
+    if (!infile.is_open()) {
+        cout << "Instructions file not found." << endl;
+        return;
+    }
+
+    cout << "\n ~~~~~~~~~~ INSTRUCTIONS ~~~~~~~~~~ \n" << endl;
+
+    string line;
+    while (getline(infile, line)) {
+        cout << line << endl;
+    }
+
+    cout << "\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n" << endl;
+
+    cout << "Press Enter to start your Longhorn journey...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
 void TreasureHunt::startGame() {
 
