@@ -1,3 +1,6 @@
+//This file implements the core logic for the Treasure Hunt game
+//it Features : laoding map and clue data, player movements and interactions, scoring/timing/game state, and saving/loading progress 
+
 #include "TreasureHunt.h"
 
 #include <cctype>
@@ -13,6 +16,7 @@ using namespace std;
 
 namespace utility {
 namespace {
+//Removeing leading and trailing whitespace from a string and is ued when reading input files to clean up formating 
 string trim(const string& value) {
     const size_t first = value.find_first_not_of(" \t\r\n");
     if (first == string::npos) {
@@ -23,7 +27,7 @@ string trim(const string& value) {
     return value.substr(first, last - first + 1);
 }
 }
-
+//The constructor initializes deafault game state values: players starts at (0,0), score starts at 0, time limit is 5 min
 TreasureHunt::TreasureHunt() {
     playerRow = 0;
     playerCol = 0;
@@ -33,6 +37,7 @@ TreasureHunt::TreasureHunt() {
 
 }
 
+//loads map from file into a 2D grid and finds the first walkable tile for the player
 bool TreasureHunt::loadMap(const string& mapFile) {
     ifstream infile(mapFile.c_str());
     if (!infile.is_open()) {
@@ -54,7 +59,7 @@ bool TreasureHunt::loadMap(const string& mapFile) {
         cout << "Longhorn Error: The campus map is empty... that ain’t right." << endl;
         return false;
     }
-
+//Find the first '.' tile to use as the player's starting position
     bool foundStart = false;
     for (size_t row = 0; row < mapGrid.size(); ++row) {
         for (size_t col = 0; col < mapGrid[row].size(); ++col) {
@@ -77,7 +82,7 @@ bool TreasureHunt::loadMap(const string& mapFile) {
 
     return true;
 }
-
+//loads clues from clue file
 bool TreasureHunt::loadClues(const string& cluesFile) {
     ifstream infile(cluesFile.c_str());
     if (!infile.is_open()) {
@@ -130,7 +135,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
     placeCluesOnMap();
     return true;
 }
-
+//places clues randomly across walkable tiles and avoids placing a clue on the player's starting position
 void TreasureHunt::placeCluesOnMap() {
     vector<pair<int, int> > openTiles;
 
@@ -174,7 +179,7 @@ void TreasureHunt::placeCluesOnMap() {
         used[index] = true;
     }
 }
-
+//Displayes the current game map where "@" is the player  "#" are the walls "." are the tiles
 void TreasureHunt::drawMap() {
     cout << "\n Longhorn Score: " << totalScore << endl;
     cout << "Move with W/A/S/D (Q to quit the Forty Acres): " << endl;
@@ -191,7 +196,7 @@ void TreasureHunt::drawMap() {
     }
     cout << endl;
 }
-
+//Moves the player in a specifies direction for a specific number of steps
 void TreasureHunt::movePlayer(char direction, int steps) {
   const char move = static_cast<char>(tolower(static_cast<unsigned char>(direction)));
 
@@ -199,7 +204,7 @@ void TreasureHunt::movePlayer(char direction, int steps) {
         gameOver = true;
         return;
     }
-
+//updates position based on (WASD)
  for (int i = 0; i < steps; i++) {
     int newRow = playerRow;
     int newCol = playerCol;
@@ -221,7 +226,7 @@ void TreasureHunt::movePlayer(char direction, int steps) {
         return;
     }
 
-
+//prevent player from going off the map
     if (newRow < 0 || newRow >= static_cast<int>(mapGrid.size())) {
         cout << "You’re leaving campus boundaries.Stay on the Forty Acres!" << endl;
         return;
@@ -231,7 +236,7 @@ void TreasureHunt::movePlayer(char direction, int steps) {
         cout << "You’re leaving campus boundaries.Stay on the Forty Acres!" << endl;
         return;
     }
-
+//prevents you from walking through walls
     if (mapGrid[newRow][newCol] == '#') {
         cout << "You ran into a campus wall after "<< i << " step(s). Watch where you're going!" << endl;
         return;
@@ -246,7 +251,7 @@ void TreasureHunt::movePlayer(char direction, int steps) {
     }
 }
 }
-
+//if a player lands on a clue symbol it triggers a clue
 int TreasureHunt::findClueIndex(char symbol) {
     for (size_t i = 0; i < clues.size(); ++i) {
         if (clues[i].getSymbol() == symbol) {
@@ -256,7 +261,7 @@ int TreasureHunt::findClueIndex(char symbol) {
 
     return -1;
 }
-
+////handles interactions when players land on a clue : it prompts user with questions, upadates score based on results, removes clue from map if completed
 void TreasureHunt::triggerClue(char symbol) {
     const int clueIndex = findClueIndex(symbol);
     if (clueIndex == -1) {
