@@ -398,6 +398,24 @@ void TreasureHunt::displayFinalResult() {
     cout << "\nFinal Longhorn Score: " << totalScore << endl;
     cout << "Clues completed: " << completed << " / " << clues.size() << endl;
     cout << "Completion: " << percent << "%" << endl;
+    if (percent == 100) {
+    cout << "You know to much.... You're a TA." << endl;
+}
+else if (percent >= 80) {
+    cout << "You got an 80, so you're a real Longhorn. B-." << endl;
+}
+else if (percent >= 60) {
+    cout << "You must be a student athlete with that score :/" << endl;
+}
+else if (percent >= 40) {
+    cout << "You got a 40% so you're from Texas State. Go study and party less." << endl;
+}
+else if (percent > 0) {
+    cout << "AGGIE! You have one minute to get out of here." << endl;
+}
+else {
+    cout << "You failed your quest... Try again!" << endl;
+}
     cout << "Time on the Forty Acres: " << getElapsedTime() << " seconds" << endl;
 }
 
