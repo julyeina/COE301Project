@@ -270,6 +270,8 @@ void TreasureHunt::triggerClue(char symbol) {
     cout << "\n Longhorn Clue " << clues[clueIndex].getSymbol() << endl;
     cout << clues[clueIndex].getQuestion() << endl;
 
+    //when player answers a 'clue'
+    
     bool solved = false;
     for (int attempt = 1; attempt <= clues[clueIndex].getMaxAttempts(); ++attempt) {
         cout << "Attempt " << attempt << " of " << clues[clueIndex].getMaxAttempts() << ": ";
@@ -277,6 +279,7 @@ void TreasureHunt::triggerClue(char symbol) {
         string userAnswer;
         getline(cin, userAnswer);
 
+        //if player answered correctly
         if (clues[clueIndex].checkAnswer(userAnswer)) {
             solved = true;
             clues[clueIndex].setCompleted(true);
@@ -293,7 +296,7 @@ void TreasureHunt::triggerClue(char symbol) {
             }
             break;
         }
-
+//if player answered incorrectlly
         cout << "Not quite, Longhorn." << endl;
     }
 
