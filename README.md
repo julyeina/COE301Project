@@ -1,54 +1,49 @@
-Class required: TreasureHunt and Clue
+So You Think You’re a Longhorn!
+UT Campus Treasure Hunt (COE 301 – Spring 2026)
 
-Functions required for TreasureHunt class:
-  loadMap()  
-  loadClues()
-  drawMap()
-  movePlayer()
-  triggerClue()
-  startGame()
-  displayFinalResult()
+COMPILATION
 
-Functions suggested for Clue class:
-  getSymbol()
-  getQuestion()
-  getPoints()
-  checkAnswer()
-  and more
+Compile:
+g++ main.cpp Clue.cpp TreasureHunt.cpp -o treasure_hunt
 
-main.cpp - run and start the program
-map.txt - map input and needed for treasurehunt and laodmap() function
-clues.txt - clue input
-Clue.h - declare constructor, getter/bool functions
-Clue.cpp 
-TreasureHunt.h - declare functions 
-TreasureHunt.cpp
+Run:
+./treasure_hunt
 
-Bonus implementations:
-• Randomized clue order ** ask
-• Timer system
-• Save/load progress
-• Larger Map with decorations
-• Hidden secret location
-• Display a “Fun Fact” message after a correct answer
 
-Be Sure To:
-- Make comments for every major part of your work
-- Create "checkpoints" for if there is an error ie if(doesn't work) cout error message
-- be sure to get rid of any error underlines in your work
+TEAM ROLES & RESPONSIBILITIES
 
-- goal is to have a runnable code by sunday morning
+MAP SYSTEM – Londyn
+- Designed and implemented custom campus map (including designing tower shape)
+- Loaded map from map.txt into a vector structure
+- Implemented player movement via WASD with boundary conditions
+- Redrew map after each move
+- Bonus: larger map with decorations and hidden secret location
 
-1. scoring logic/attempts 
-  triggerclue in treasurehunt.cpp 
-2. clue calling logic (when you move have you hit a clue or not, calls clue function based on if you hit a clue)
-  triggerclue and findclueindex
-  Display a “Fun Fact” message after a correct answer
-  Hidden secret location (random add another if statement to clue logic)
-3-4. making sure everything compiles and runs
-  all files
-5. graphics/outputs/inputs
-  clue and map, all files once compileable
-  Larger Map with decorations
-6. win/loss logic, percent completion, saving
-  startgame and displayfinalresult, checkpoints for saving
+CLUE SYSTEM – Leina
+- Designed and implemented Clue class
+- Loaded clues from clue.txt
+- Managed questions, answers, attempts and points
+- Bonus: randomized clue order
+
+GAME LOGIC – Beltran, Bella, Elizabeth
+- Implemented TreasureHunt class
+  - Clue triggering system
+  - Score tracking
+  - Win/Lose conditions
+- Integrated map and clue systems
+- Bonus
+  - Fun fact display
+  - Save/Checkpoints
+  - Timer system
+
+DOCUMENTATION & INTEGRATION – Téa
+- Created README documentation
+- Ensured full project compilation and integration
+- Debugging and final polish
+- Verified all project requirements were met via rubric
+
+USE OF AI TOOLS
+
+AI tools (such as ChatGPT) were used to assist with mainly stylistic choices, such as the following:
+- Colorful text outputs
+- 
