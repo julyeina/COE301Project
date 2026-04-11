@@ -488,6 +488,11 @@ void utility::TreasureHunt::startGame() {
             break;
         }
 
+        if (allCluesCompleted()) {
+            cout << "\nALL CHALLENGES COMPLETE!" << endl;
+            gameOver = true; // This breaks the while loop
+        }
+
         cout << "Your move: ";
         char direction = '\0';
         int steps = 1;

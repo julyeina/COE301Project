@@ -1,21 +1,21 @@
-19 29
-65
+34 50
+50
 18
 F 0 What is the fountain near the Tower called?
 F 0 On what street can you find the Littlefield Fountain on?
 F 0 In what fountain do graduating students take pictures in the water?
-G 0 Which U.S. president is represented by the statue marked G?
-G 0 What building is the George Washington Statue located in front of?
+G 1 Which U.S. president is represented by the statue marked G?
+G 1 What building is the George Washington Statue located in front of?
 G 0 Who sculpted the George Washington Statue
 H 0 What does the H in Hogg Memorial Auditorium stand for?
 H 0 Who designed the Hogg Memorial Auditorium?
 H 0 When was the Hogg Memorial Completed?
 P 0 What campus pond is home to turtles AND ducks?
-P 0 What year was the turtle pond constructed?
+P 1 What year was the turtle pond constructed?
 P 0 About how many turtles is turtle pond home to?
-T 1 In what year was the UT Tower completed?
-T 0 How tall is the tower in feet?
+T 0 In what year was the UT Tower completed?
+T 1 How tall is the tower in feet?
 T 0 How many bells does the tower have?
 U 0 What building is home to the only panda express on campus?
 U 0 In what building can you find the Alienware Longhorn Esports Arena and Lounge?
-U 1 In what building can you watch movies on campus?
+U 0 In what building can you watch movies on campus?
