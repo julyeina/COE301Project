@@ -47,8 +47,8 @@ TreasureHunt::TreasureHunt() {
 
 }
 
-//loads map from file into a 2D grid and finds the first walkable tile for the player
-bool TreasureHunt::loadMap(const string& mapFile) {
+// loads map from file into a 2D grid and finds the player's start position
+bool utility::TreasureHunt::loadMap(const string& mapFile) {
     ifstream infile(mapFile.c_str());
     if (!infile.is_open()) {
         cout << "Longhorn Alert: Couldn't load the Forty Acres map!" << endl;
@@ -58,7 +58,9 @@ bool TreasureHunt::loadMap(const string& mapFile) {
     mapGrid.clear();
     string line;
 
+    // Read the file line by line into the grid
     while (getline(infile, line)) {
+        // Handle Windows-style carriage returns
         if (!line.empty() && line[line.size() - 1] == '\r') {
             line.erase(line.size() - 1);
         }
@@ -69,31 +71,37 @@ bool TreasureHunt::loadMap(const string& mapFile) {
         cout << "Longhorn Error: The campus map is empty... that ain't right." << endl;
         return false;
     }
-//Find the first '.' tile to use as the player's starting position
+
+    // Find the '@' symbol in the map file to use as the starting position
     bool foundStart = false;
     for (size_t row = 0; row < mapGrid.size(); ++row) {
         for (size_t col = 0; col < mapGrid[row].size(); ++col) {
-            if (mapGrid[row][col] == '.') {
+            // Check for the @ you already drew in the map.txt
+            if (mapGrid[row][col] == '@') { 
                 playerRow = static_cast<int>(row);
                 playerCol = static_cast<int>(col);
+                
+                // Replace the starting '@' with a '.' so no ghost is left behind
+                mapGrid[row][col] = '.'; 
+                
                 foundStart = true;
                 break;
             }
         }
-        if (foundStart) {
-            break;
-        }
+        if (foundStart) break;
     }
 
+    // Error if the map file is missing the starting player symbol
     if (!foundStart) {
-        cout << "Longhorn Error: No walkable paths on campus!" << endl;
+        cout << "Longhorn Error: No @ symbol found on the map!" << endl;
         return false;
     }
 
     return true;
 }
+
 //loads clues from clue file
-bool TreasureHunt::loadClues(const string& cluesFile) {
+bool utility::TreasureHunt::loadClues(const string& cluesFile) {
     ifstream infile(cluesFile.c_str());
     if (!infile.is_open()) {
         cout << "Longhorn Alert: Clues couldn't be found across the Forty Acres!" << endl;
@@ -114,6 +122,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
         string clueAnswer;
         string clueFunFact;
 
+        // Parsing the pipe-delimited line
         getline(clueStream, clueSymbol, '|');
         getline(clueStream, clueQuestion, '|');
         getline(clueStream, clueAnswer, '|');
@@ -124,6 +133,7 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
         clueAnswer = trim(clueAnswer);
         clueFunFact = trim(clueFunFact);
 
+        // Cleanup trailing pipes if they exist
         if (!clueFunFact.empty() && clueFunFact[clueFunFact.size() - 1] == '|') {
             clueFunFact.erase(clueFunFact.size() - 1);
             clueFunFact = trim(clueFunFact);
@@ -134,7 +144,10 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
             continue;
         }
 
-        clues.push_back(Clue(clueSymbol[0], clueQuestion, clueAnswer, 2, 10, clueFunFact));
+        // Store the clue in the map under its specific symbol
+        // This allows multiple questions to live under one letter (like 'T')
+        char sym = clueSymbol[0];
+        clues[sym].push_back(Clue(sym, clueQuestion, clueAnswer, 2, 10, clueFunFact));
     }
 
     if (clues.empty()) {
@@ -142,63 +155,13 @@ bool TreasureHunt::loadClues(const string& cluesFile) {
         return false;
     }
 
-    //Bonus: Randomized Clue Order
-    //created a "seed" using the current time so every game is different
-    unsigned int seed = static_cast<unsigned int>(time(0));
+    // NOTE: Shuffling the whole list is removed because we now pick 
+    // a random clue from the symbol's bucket inside triggerClue.
 
-    //initialized the random generator
-    mt19937 generator(seed);
-
-    //shuffled the entire vector of clue objects which reorders the landmarks in our list
-    shuffle(clues.begin(), clues.end(), generator);
-
-    placeCluesOnMap();
     return true;
 }
-//places clues randomly across walkable tiles and avoids placing a clue on the player's starting position
-void TreasureHunt::placeCluesOnMap() {
-    vector<pair<int, int> > openTiles;
 
-    for (size_t row = 0; row < mapGrid.size(); ++row) {
-        for (size_t col = 0; col < mapGrid[row].size(); ++col) {
-            if (mapGrid[row][col] == '.' &&
-                !(static_cast<int>(row) == playerRow && static_cast<int>(col) == playerCol)) {
-                openTiles.push_back(make_pair(static_cast<int>(row), static_cast<int>(col)));
-            }
-        }
-    }
 
-    if (openTiles.size() < clues.size()) {
-        cout << "Longhorn Warning: Not enough space on campus for all clues." << endl;
-    }
-
-    vector<bool> used(openTiles.size(), false);
-
-    for (size_t i = 0; i < clues.size() && i < openTiles.size(); ++i) {
-        size_t index = ((i + 1) * openTiles.size()) / (clues.size() + 1);
-        if (index >= openTiles.size()) {
-            index = openTiles.size() - 1;
-        }
-
-        while (index < used.size() && used[index]) {
-            ++index;
-        }
-        if (index >= used.size()) {
-            index = 0;
-            while (index < used.size() && used[index]) {
-                ++index;
-            }
-        }
-        if (index >= used.size()) {
-            break;
-        }
-
-        const int row = openTiles[index].first;
-        const int col = openTiles[index].second;
-        mapGrid[row][col] = clues[i].getSymbol();
-        used[index] = true;
-    }
-}
 //Displayes the current game map where "@" is the player  "#" are the walls "." are the tiles
 void TreasureHunt::drawMap() {
     cout << "\n Longhorn Score: " << totalScore << endl;
@@ -285,7 +248,7 @@ void utility::TreasureHunt::movePlayer(char direction, int steps) {
     }
 
     // Check for secret coordinates
-    if (playerRow == 15 && playerCol == 38 && !squirrelFound) {
+    if (playerRow == 13 && playerCol == 36 && !squirrelFound) {
     cout << "Wait... Is that the legendary albino squirrel?!" << endl;
     cout << "The albino scored granted you mega aura. +50 points" << endl;
     totalScore += 50;
@@ -304,25 +267,36 @@ void utility::TreasureHunt::movePlayer(char direction, int steps) {
 }
 
 
-int TreasureHunt::findClueIndex(char symbol) {
-    for (size_t i = 0; i < clues.size(); ++i) {
-        if (clues[i].getSymbol() == symbol) {
-            return static_cast<int>(i);
-        }
-    }
-    return -1;
-}
-
 //handles interactions when players land on a clue : it prompts user with questions, upadates score based on results, removes clue from map if completed
 void utility::TreasureHunt::triggerClue(char symbol) {
-    const int clueIndex = findClueIndex(symbol);
-    if (clueIndex == -1) {
+    // 1. Check if we have any clues for this symbol in our map
+    if (clues.find(symbol) == clues.end() || clues[symbol].empty()) {
         return;
     }
 
-    if (clues[clueIndex].isCompleted()) {
+    // 2. To randomize, we pick a random index from the list of clues for this symbol
+    // We filter for one that isn't completed yet
+    vector<int> availableIndices;
+    for (int i = 0; i < clues[symbol].size(); i++) {
+        if (!clues[symbol][i].isCompleted()) {
+            availableIndices.push_back(i);
+        }
+    }
+
+    // If all clues for this specific symbol are done, just exit
+    if (availableIndices.empty()) {
+        cout << "You've already mastered this landmark!" << endl;
+        mapGrid[playerRow][playerCol] = '.'; // Just in case it wasn't cleared
         return;
     }
+
+    // Pick a random available clue
+    mt19937 gen(static_cast<unsigned int>(time(0)));
+    uniform_int_distribution<int> dist(0, availableIndices.size() - 1);
+    int randomIndex = availableIndices[dist(gen)];
+    
+    // Create a reference to the active clue so the code below still works easily
+    Clue& activeClue = clues[symbol][randomIndex];
 
     // Checking for The Big Ticket skip before the brain workout starts
     if (skipCount > 0) {
@@ -331,31 +305,30 @@ void utility::TreasureHunt::triggerClue(char symbol) {
         getline(cin, input);
         if (!input.empty() && (input[0] == 'y' || input[0] == 'Y')) {
             cout << "Skipped! No points, but you saved your GPA." << endl;
-            clues[clueIndex].setCompleted(true);
+            activeClue.setCompleted(true);
             mapGrid[playerRow][playerCol] = '.'; // Wipe it off the map
             skipCount--; // One less ticket in the pocket
             return; 
         }
     }
 
-    cout << "\n Longhorn Clue " << clues[clueIndex].getSymbol() << endl;
-    cout << clues[clueIndex].getQuestion() << endl;
+    cout << "\n Longhorn Clue " << activeClue.getSymbol() << endl;
+    cout << activeClue.getQuestion() << endl;
 
-    //when player answers a 'clue'
     bool solved = false;
-    for (int attempt = 1; attempt <= clues[clueIndex].getMaxAttempts(); ++attempt) {
-        cout << "Attempt " << attempt << " of " << clues[clueIndex].getMaxAttempts() << ": ";
+    for (int attempt = 1; attempt <= activeClue.getMaxAttempts(); ++attempt) {
+        cout << "Attempt " << attempt << " of " << activeClue.getMaxAttempts() << ": ";
 
         string userAnswer;
         getline(cin, userAnswer);
 
-        //if player answered correctly
-        if (clues[clueIndex].checkAnswer(userAnswer)) {
+        // if player answered correctly
+        if (activeClue.checkAnswer(userAnswer)) {
             solved = true;
-            clues[clueIndex].setCompleted(true);
+            activeClue.setCompleted(true);
             
             // Calculating the payout (with a possible Bevo Bucks multiplier)
-            int pointsToGive = clues[clueIndex].getPoints();
+            int pointsToGive = activeClue.getPoints();
             if (doublePoints) {
                 cout << ORANGE << "BEVO BUCKS ACTIVATED! Doubling your loot!" << RESET << endl;
                 pointsToGive *= 2;
@@ -363,31 +336,31 @@ void utility::TreasureHunt::triggerClue(char symbol) {
             }
 
             totalScore += pointsToGive;
+            
+            // LANDMARK DISAPPEARS ONLY ON SUCCESS
             mapGrid[playerRow][playerCol] = '.';
 
-            cout << "Correct! You earned " << pointsToGive << "  Longhorn points!" << endl;
+            cout << "Correct! You earned " << pointsToGive << " Longhorn points!" << endl;
             int remaining = timeLimitSeconds - getElapsedTime();
             if (remaining < 0) remaining = 0;
             cout << "Time left: " << remaining << " seconds" << endl;
             
-            if (!clues[clueIndex].getFunFact().empty()) {
-                cout << clues[clueIndex].getFunFact() << endl;
+            if (!activeClue.getFunFact().empty()) {
+                cout << activeClue.getFunFact() << endl;
             }
             break;
         }
-        //if player answered incorrectlly
+        // if player answered incorrectly
         cout << "Not quite, Longhorn." << endl;
     }
 
     if (!solved) {
         totalScore -= 5;
-        cout << "Out of attempts. Lost 5 Longhorn points." << endl;
+        cout << "Out of attempts. Lost 5 Longhorn points. The landmark remains..." << endl;
         
-        int remaining = timeLimitSeconds - getElapsedTime(); //Countdown after getting question right or wrong
+        int remaining = timeLimitSeconds - getElapsedTime(); 
         if (remaining < 0) remaining = 0;
-        cout << "Time remaining: "
-         << remaining
-         << " seconds" << endl;
+        cout << "Time remaining: " << remaining << " seconds" << endl;
     }
 
     cout << "Current Longhorn Score: " << totalScore << endl;
@@ -395,15 +368,21 @@ void utility::TreasureHunt::triggerClue(char symbol) {
 }
 
 
-bool TreasureHunt::allCluesCompleted() const {
-    for (size_t i = 0; i < clues.size(); ++i) {
-        if (!clues[i].isCompleted()) {
-            return false;
+bool utility::TreasureHunt::allCluesCompleted() const {
+    // iterate through map entries
+    for (auto it = clues.begin(); it != clues.end(); ++it) {
+        // check each vector of clues for current symbol
+        for (const auto& clue : it->second) {
+            // return false if any clue remains unfinished
+            if (!clue.isCompleted()) {
+                return false;
+            }
         }
     }
-
+    // all clues across all symbols are done
     return true;
 }
+
 
 void TreasureHunt::handlePowerup() {
     // 1. Setup the Random Engine (MT19937) for the Bonus requirement
@@ -468,6 +447,11 @@ void utility::TreasureHunt::startGame() {
     cout << WHITE << "Hello player! Welcome to: " << ORANGE << "So You Think You're a Longhorn!" << RESET << endl;
     cout << WHITE << "You are tasked with finding different " << ORANGE << "LANDMARKS" << WHITE << " on the map" << endl;
     cout << WHITE << "(represented by symbols and special characters). " << RESET << endl;
+    cout << WHITE << "If you get the question right, the symbol will " << ORANGE << "DISAPPEAR," << RESET << endl;
+    cout << WHITE << "indicating you mastered that location on the map." << endl;
+    cout << WHITE << "If you get the question incorrect after 2 attempts," << endl;
+    cout << WHITE << "don't worry navigate back to that location for another try with a " << endl;
+    cout << ORANGE << "NEW" << WHITE << " question." << endl;
     cout << WHITE << "Power ups grant you " << ORANGE << "EXTRA TIME, DOUBLE POINTS," << WHITE << " or " << endl;
     cout << WHITE << "the option to " << ORANGE << "SKIP A CLUE." << RESET << endl;
     cout << WHITE << "You will only have " << ORANGE << "FIVE MINUTES" << WHITE << " to complete your quest...." << endl;
@@ -537,43 +521,49 @@ void utility::TreasureHunt::startGame() {
 
 }
 
-
-void TreasureHunt::displayFinalResult() {
+void utility::TreasureHunt::displayFinalResult() {
     int completed = 0;
-    for (size_t i = 0; i < clues.size(); ++i) {
-        if (clues[i].isCompleted()) {
-            ++completed;
+    int totalCount = 0;
+
+    // iterate through map categories to count clues
+    for (auto it = clues.begin(); it != clues.end(); ++it) {
+        // iterate through clues in each symbol's vector
+        for (const auto& clue : it->second) {
+            totalCount++; // count total questions in file
+            if (clue.isCompleted()) {
+                completed++; // count successful answers
+            }
         }
     }
 
     double percent = 0.0;
-    if (!clues.empty()) {
-        percent = (static_cast<double>(completed) / static_cast<double>(clues.size())) * 100.0;
+    if (totalCount > 0) {
+        percent = (static_cast<double>(completed) / static_cast<double>(totalCount)) * 100.0;
     }
 
     cout << "\nFinal Longhorn Score: " << totalScore << endl;
-    cout << "Clues completed: " << completed << " / " << clues.size() << endl;
+    cout << "Clues completed: " << completed << " / " << totalCount << endl;
     cout << "Completion: " << percent << "%" << endl;
 
     //buzzfeed-esque quiz answers
     if (percent == 100) {
-    cout << "You know to much.... You're a TA." << endl;
-}
-else if (percent >= 80) {
-    cout << "You got an 80, so you're a real Longhorn. B-." << endl;
-}
-else if (percent >= 60) {
-    cout << "You must be a student athlete with that score :/" << endl;
-}
-else if (percent >= 40) {
-    cout << "You got a 40% so you're from Texas State. Go study and party less." << endl;
-}
-else if (percent > 0) {
-    cout << "AGGIE! You have one minute to get out of here." << endl;
-}
-else {
-    cout << "You failed your quest... Try again!" << endl;
-}
+        cout << "You know to much.... You're a TA." << endl;
+    }
+    else if (percent >= 80) {
+        cout << "You got an 80, so you're a real Longhorn. B-." << endl;
+    }
+    else if (percent >= 60) {
+        cout << "You must be a student athlete with that score :/" << endl;
+    }
+    else if (percent >= 40) {
+        cout << "You got a 40% so you're from Texas State. Go study and party less." << endl;
+    }
+    else if (percent > 0) {
+        cout << "AGGIE! You have one minute to get out of here." << endl;
+    }
+    else {
+        cout << "You failed your quest... Try again!" << endl;
+    }
     cout << "Time on the Forty Acres: " << getElapsedTime() << " seconds" << endl;
 }
 
@@ -590,7 +580,7 @@ void TreasureHunt::promptSave()  // This ensures just saving the progress by sav
     }
 }
 
-bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can be loaded back by reading the cordinates and clues completed from the text file and then restoring the game state accordingly
+bool utility::TreasureHunt::loadGame(const string& filename) // Restore game state from file
 {
     ifstream inFile(filename);
     if (!inFile.is_open()) {
@@ -602,28 +592,48 @@ bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can
     inFile >> playerRow >> playerCol;
     inFile >> totalScore;
 
-    int clueCount;
-    inFile >> clueCount;
+    int totalSavedClues;
+    inFile >> totalSavedClues;
 
-    // Restore which clues were completed
-    for (int i = 0; i < clueCount; ++i) {
+    // Restore completion status for multiple clues per symbol
+    for (int i = 0; i < totalSavedClues; ++i) {
         char symbol;
         bool completed;
+        string questionText;
+        
         inFile >> symbol >> completed;
+        getline(inFile >> ws, questionText); // Identify specific clue by question text
 
-        int index = findClueIndex(symbol);
-        if (index == -1) {
-            continue;
+        // Check if symbol exists in map
+        if (clues.find(symbol) != clues.end()) {
+            // Find specific clue in vector matching the saved question
+            for (auto& clue : clues[symbol]) {
+                if (clue.getQuestion() == questionText) {
+                    clue.setCompleted(completed);
+                    break;
+                }
+            }
         }
 
-        clues[index].setCompleted(completed);
-
-        // If a clue was already completed, remove it from the map
+        // If a landmark symbol is fully cleared, remove from map grid
         if (completed) {
-            for (size_t r = 0; r < mapGrid.size(); ++r) {
-                for (size_t c = 0; c < mapGrid[r].size(); ++c) {
-                    if (mapGrid[r][c] == symbol) {
-                        mapGrid[r][c] = '.';
+            bool anyLeft = false;
+            if (clues.find(symbol) != clues.end()) {
+                for (const auto& c : clues[symbol]) {
+                    if (!c.isCompleted()) {
+                        anyLeft = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Only turn symbol into path if all questions for that letter are done
+            if (!anyLeft) {
+                for (size_t r = 0; r < mapGrid.size(); ++r) {
+                    for (size_t c = 0; c < mapGrid[r].size(); ++c) {
+                        if (mapGrid[r][c] == symbol) {
+                            mapGrid[r][c] = '.';
+                        }
                     }
                 }
             }
@@ -634,7 +644,7 @@ bool TreasureHunt::loadGame(const string& filename) // Ensures that the game can
     return true;
 }
 
-void TreasureHunt::saveGame(const string& filename)
+void utility::TreasureHunt::saveGame(const string& filename) // save current state
 {
     ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -646,11 +656,23 @@ void TreasureHunt::saveGame(const string& filename)
     outFile << playerRow << " " << playerCol << endl;
     outFile << totalScore << endl;
 
-    // Save clue completion state
-    outFile << clues.size() << endl;
-    for (int i = 0; i < clues.size(); i++) {
-        outFile << clues[i].getSymbol() << " "
-            << clues[i].isCompleted() << endl;
+    // Count every individual clue in the map
+    int totalClues = 0;
+    for (auto it = clues.begin(); it != clues.end(); ++it) {
+        totalClues += it->second.size();
+    }
+    
+    outFile << totalClues << endl;
+
+    // Iterate through map categories
+    for (auto it = clues.begin(); it != clues.end(); ++it) {
+        // Iterate through clues in current vector
+        for (const auto& clue : it->second) {
+            // Save symbol, completion status, and question text to identify it later
+            outFile << clue.getSymbol() << " "
+                    << clue.isCompleted() << " "
+                    << clue.getQuestion() << endl;
+        }
     }
 
     outFile.close();

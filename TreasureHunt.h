@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
+#include <map>
 #include "Clue.h"
 using namespace std;
 
@@ -11,7 +12,7 @@ namespace utility{
     class TreasureHunt{
     private:
         vector<string> mapGrid;
-        vector<Clue> clues;
+        map<char, vector<Clue>> clues;
         int playerRow;
         int playerCol;
         int totalScore;
@@ -23,7 +24,6 @@ namespace utility{
         chrono::steady_clock::time_point endTime;
         int timeLimitSeconds = 300; // Total time (Starting with 5 mins)
 
-        void placeCluesOnMap();
         bool allCluesCompleted() const;
 
         bool squirrelFound = false; //for tracking the finding of the surprise waiting when the player finds the passage
