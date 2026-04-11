@@ -46,4 +46,4 @@ USE OF AI TOOLS
 
 AI tools (such as ChatGPT) were used to assist with mainly stylistic choices, such as the following:
 - Colorful text outputs
-- 
+- Implementing the random clue bonus
