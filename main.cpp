@@ -7,7 +7,7 @@ int main(){
     TreasureHunt game; 
 
     //ERROR CHECKING SCRIPTS    
-    if (!game.loadMap("Map 1.txt")){ 
+    if (!game.loadMap("map.txt")){ 
         cout << "Longhorn Alert: Couldn't load the campus map! Check your file and try again." << endl; 
         return  1; 
 
