@@ -547,7 +547,7 @@ void utility::TreasureHunt::displayFinalResult() {
 
         const int TOTAL_LANDMARKS = 6;
 
-        double percent = (static_cast<double>(completed) / static_cast<double>(TOTAL_LANDMARKS) * 100.0;
+        double percent = (static_cast<double>(completed) / static_cast<double>(TOTAL_LANDMARKS) * 100.0);
     }
 
     cout << "\nFinal Longhorn Score: " << totalScore << endl;
