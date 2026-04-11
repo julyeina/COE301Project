@@ -463,6 +463,7 @@ void utility::TreasureHunt::startGame() {
     cout << WHITE << "Explore campus. Hit the landmarks. Answer the clues." << endl;
     cout << WHITE << "Be Aware: Each correct answer is 10 points, but an incorrect answer will cost you 5 points :< ." << endl;
     cout << WHITE << "P.S. there may or may not be a " << ORANGE << "HIDDEN PASSAGE" << WHITE << " somewhere..." << endl;
+    cout << WHITE << "Enter h during any move for a " << ORANGE << "hint about the passage." << endl;
     cout << WHITE << "Your final percentage will reveal your " << ORANGE << BOLD << "TRUE STUDENT IDENTITY." << RESET << endl << endl;
 
     // GAME INSTRUCTION
@@ -556,7 +557,7 @@ void utility::TreasureHunt::displayFinalResult() {
         cout << "You must be a student athlete with that score :/" << endl;
     }
     else if (percent >= 40) {
-        cout << "You got a 40% so you're from Texas State. Go study and party less." << endl;
+        cout << "You got a 40 so you're from Texas State. Go study and party less." << endl;
     }
     else if (percent > 0) {
         cout << "AGGIE! You have one minute to get out of here." << endl;
