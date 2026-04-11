@@ -439,16 +439,27 @@ void TreasureHunt::handlePowerup() {
 
 void utility::TreasureHunt::startGame() {
 
-    cout << "Pick up where you left off, Longhorn? (y/n): "; //Allows players to load a previously saved game when they start the game, giving them the option to continue from where they left off or start fresh.
-    char choice;
-    cin >> choice;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    //Allows players to load a previously saved game when they start the game, giving them the option to continue from where they left off or start fresh. 
+      char choice;
+        while (true) {
+            cout << "Pick up where you left off, Longhorn? (y/n): ";
+            cin >> choice;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    if (choice == 'y' || choice == 'Y') {
-        loadGame("save.txt");
-    }
-    startTime = chrono::steady_clock::now();
-    
+            if (choice == 'y' || choice == 'Y') {
+                loadGame("save.txt");
+                break;
+            }
+            else if (choice == 'n' || choice == 'N') {
+                break;
+            }
+            else {
+                cout << "Invalid input. Please enter 'y' or 'n'.\n";
+            }
+        }
+
+        startTime = chrono::steady_clock::now();
+   
     // Game Intro 
     cout << ORANGE << BOLD << "----------------------------------------------------" << RESET << endl;
     cout << WHITE << BOLD <<  "        QUIZ: SO YOU THINK YOU'RE A LONGHORN?       " << RESET << endl;
@@ -509,6 +520,11 @@ void utility::TreasureHunt::startGame() {
 
         movePlayer(direction, steps);
 
+        // Show timer after every move
+        int remaining = timeLimitSeconds - getElapsedTime();
+        if (remaining < 0) remaining = 0;
+
+        cout << "Time remaining: " << remaining << " seconds" << endl;
         if (allCluesCompleted()) {
             cout << "You completed all the Longhorn challenges!" << endl;
             gameOver = true;
