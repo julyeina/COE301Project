@@ -544,11 +544,14 @@ void utility::TreasureHunt::displayFinalResult() {
 
     double percent = 0.0;
     if (totalCount > 0) {
-        percent = (static_cast<double>(completed) / static_cast<double>(totalCount)) * 100.0;
+
+        const int TOTAL_LANDMARKS = 6;
+
+        double percent = (static_cast<double>(completed) / static_cast<double>(TOTAL_LANDMARKS) * 100.0;
     }
 
     cout << "\nFinal Longhorn Score: " << totalScore << endl;
-    cout << "Clues completed: " << completed << " / " << totalCount << endl;
+    cout << "Clues completed: " << completed << " / " << "6"  << endl;
     cout << "Completion: " << percent << "%" << endl;
 
     //buzzfeed-esque quiz answers
